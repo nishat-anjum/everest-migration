@@ -100,6 +100,12 @@ public class Queries {
     @Value("${vehicle.photo.select}")
     private String vehiclePhotoSelectQuery;
 
+    @Value("${organization.type.enroll.select}")
+    private String orgTypeEnrollSelectQuery;
+
+    @Value("${organization.type.enroll.select}")
+    private String orgTypeEnrollInsertQuery;
+
     public String getOrgStampInsertQuery() {
         return orgStampInsertQuery;
     }
@@ -130,5 +136,21 @@ public class Queries {
 
     public void setVehiclePhotoSelectQuery(String vehiclePhotoSelectQuery) {
         this.vehiclePhotoSelectQuery = vehiclePhotoSelectQuery;
+    }
+
+    public String getOrgTypeEnrollSelectQuery() {
+        return orgTypeEnrollSelectQuery;
+    }
+
+    public void setOrgTypeEnrollSelectQuery(String orgTypeEnrollSelectQuery) {
+        this.orgTypeEnrollSelectQuery = orgTypeEnrollSelectQuery;
+    }
+
+    public String getOrgTypeEnrollInsertQuery() {
+        return orgTypeEnrollInsertQuery;
+    }
+
+    public void setOrgTypeEnrollInsertQuery(String orgTypeEnrollInsertQuery) {
+        this.orgTypeEnrollInsertQuery = orgTypeEnrollInsertQuery;
     }
 }
