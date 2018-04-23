@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 
 /**
- * Created by raqib on 25/11/15.
+ * Created by nishat on 24/04/18
  */
 @Configuration
 @PropertySource({"classpath:datasource-${spring.profiles.active}.properties"})

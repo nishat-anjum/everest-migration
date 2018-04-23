@@ -33,7 +33,7 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 
 /**
- * Created by raqib on 24/11/15.
+ * Created by nishat on 24/04/18.
  */
 @Configuration
 @EnableBatchProcessing
@@ -66,7 +66,7 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
                                                                       @Qualifier("indivEnrollmentRowMapper") RowMapper<EnrollmentBean> rowMapper) {
         JdbcCursorItemReader<EnrollmentBean> reader = new JdbcCursorItemReader<>();
         reader.setDataSource(dataSource);
-        reader.setSql(Queries.INDIV_TYPE_ENROLL_SELECT);
+        reader.setSql(queries.getIndivTypeEnrollSelectQuery());
         reader.setRowMapper(rowMapper);
         return reader;
     }
@@ -76,7 +76,7 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
     public JdbcBatchItemWriter<EnrollmentBean> indivTypeEnrollWriter(@Qualifier("dataSourceOUT") DataSource dataSource) {
         JdbcBatchItemWriter<EnrollmentBean> writer = new JdbcBatchItemWriter<>();
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<EnrollmentBean>());
-        writer.setSql(Queries.INDIV_TYPE_ENROLL_INSERT);
+        writer.setSql(queries.getIndivTypeEnrollInsertQuery());
         writer.setDataSource(dataSource);
         return writer;
     }
@@ -87,7 +87,7 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
                                                            RowMapper<Biometric> rowMapper) {
         JdbcCursorItemReader<Biometric> reader = new JdbcCursorItemReader<>();
         reader.setDataSource(dataSource);
-        reader.setSql(Queries.BIOMETRIC_SELECT);
+        reader.setSql(queries.getBiometricSelectQuery());
         reader.setRowMapper(rowMapper);
         return reader;
     }
@@ -97,7 +97,7 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
     public JdbcBatchItemWriter<Biometric> biometricWriter(@Qualifier("dataSourceOUT") DataSource dataSource) {
         JdbcBatchItemWriter<Biometric> writer = new JdbcBatchItemWriter<>();
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Biometric>());
-        writer.setSql(Queries.BIOMETRIC_INSERT);
+        writer.setSql(queries.getBiometricInsertQuery());
         writer.setDataSource(dataSource);
         return writer;
     }
