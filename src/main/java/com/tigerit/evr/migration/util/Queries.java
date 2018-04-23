@@ -1,8 +1,14 @@
 package com.tigerit.evr.migration.util;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
 /**
  * Created by nishat on 4/23/18.
  */
+@Component
+@PropertySource({"classpath:sql-${spring.profiles.active}.properties"})
 public class Queries {
     public static final String INDIV_TYPE_ENROLL_SELECT = "SELECT " +
             "ev.id, " +
@@ -79,6 +85,50 @@ public class Queries {
             "LEFT JOIN person per ON (bio.applicant_id = per.id) " +
             "WHERE bio.active = 1";
 
-    public static final String BIOMETRIC_INSERT= "INSERT INTO Biometric_Test (id, photo, signature, created_by, create_time) VALUES " +
+    public static final String BIOMETRIC_INSERT = "INSERT INTO Biometric_Test (id, photo, signature, created_by, create_time) VALUES " +
             "(:id, :photo, :signature, :createdBy, :createTime)";
+
+    @Value("${organization.stamp.insert}")
+    private String orgStampInsertQuery;
+
+    @Value("${organization.stamp.select}")
+    private String orgStampSelectQuery;
+
+    @Value("${vehicle.photo.insert}")
+    private String vehiclePhotoInsertQuery;
+
+    @Value("${vehicle.photo.select}")
+    private String vehiclePhotoSelectQuery;
+
+    public String getOrgStampInsertQuery() {
+        return orgStampInsertQuery;
+    }
+
+    public void setOrgStampInsertQuery(String orgStampInsertQuery) {
+        this.orgStampInsertQuery = orgStampInsertQuery;
+    }
+
+    public String getOrgStampSelectQuery() {
+        return orgStampSelectQuery;
+    }
+
+    public void setOrgStampSelectQuery(String orgStampSelectQuery) {
+        this.orgStampSelectQuery = orgStampSelectQuery;
+    }
+
+    public String getVehiclePhotoInsertQuery() {
+        return vehiclePhotoInsertQuery;
+    }
+
+    public void setVehiclePhotoInsertQuery(String vehiclePhotoInsertQuery) {
+        this.vehiclePhotoInsertQuery = vehiclePhotoInsertQuery;
+    }
+
+    public String getVehiclePhotoSelectQuery() {
+        return vehiclePhotoSelectQuery;
+    }
+
+    public void setVehiclePhotoSelectQuery(String vehiclePhotoSelectQuery) {
+        this.vehiclePhotoSelectQuery = vehiclePhotoSelectQuery;
+    }
 }

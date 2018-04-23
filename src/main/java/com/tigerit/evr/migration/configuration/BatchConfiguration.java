@@ -47,6 +47,9 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
     @Autowired
     private DataSource dataSourceMETA;
 
+    @Autowired
+    private Queries queries;
+
     @Override
     public JobRepository createJobRepository() throws Exception {
         JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
@@ -56,8 +59,6 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
         factory.afterPropertiesSet();
         return factory.getObject();
     }
-
-    // tag::ReaderWriterProcessor[Fitness]
 
     @StepScope
     @Bean(name = "indivTypeEnrollReader")
@@ -100,55 +101,50 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
         writer.setDataSource(dataSource);
         return writer;
     }
-//
-//    @Bean
-//    @StepScope
-//    public JdbcBatchItemWriter<TaxToken> taxTokenActivityWriter(@Qualifier("dataSourceOUT") DataSource dataSource) {
-//        JdbcBatchItemWriter<TaxToken> writer = new JdbcBatchItemWriter<>();
-//        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<TaxToken>());
-//        writer.setSql("insert into ACTIVITY_TAX_TOKEN(TAX_TOKEN_ID, REGISTRATION_NO, REGISTRATION_ID, EXPIRY_DATE, ACTIVITY_ID, ACTIVITY_ACTION, ACTIVITY_USER, ACTIVITY_TIME)" +
-//                " values (:taxTokenId, :registrationNo, :registrationId, :expiryDate, ACTIVITY_TAX_TOKEN_SEQ.nextval, 0, 'service', systimestamp)");
-//        writer.setDataSource(dataSource);
-//        return writer;
-//    }
-//
-//    @Bean
-//    @StepScope
-//    public CompositeItemWriter<TaxToken> taxTokenCompositeWriter(@Qualifier("biometricWriter") final ItemWriter<TaxToken> writer,
-//                                                                 @Qualifier("taxTokenActivityWriter") final ItemWriter<TaxToken> activityWriter) {
-//        CompositeItemWriter<TaxToken> compositeItemWriter = new CompositeItemWriter<>();
-//        compositeItemWriter.setDelegates(new ArrayList<ItemWriter<? super TaxToken>>() {
-//            {
-//                add(writer);
-//                add(activityWriter);
-//            }
-//        });
-//        return compositeItemWriter;
-//    }
-//    // tag::ReaderWriterProcessor[TaxToken]
-//
-//    // tag::ReaderWriterProcessor[LRegistrationEvent]
-//    @Bean
-//    @StepScope
-//    public JdbcCursorItemReader<LRegistrationEvent> lRegistrationEventReader(@Qualifier("dataSourceIN") DataSource dataSource,
-//                                                                             RowMapper<LRegistrationEvent> rowMapper) {
-//        JdbcCursorItemReader<LRegistrationEvent> reader = new JdbcCursorItemReader<>();
-//        reader.setDataSource(dataSource);
-//        reader.setSql("select EVENT_ID, EVENT_CODE, EVENT_NAME from L_REGISTRATION_EVENT order by EVENT_ID");
-//        reader.setRowMapper(rowMapper);
-//        return reader;
-//    }
-//
-//    @Bean
-//    @StepScope
-//    public JdbcBatchItemWriter<LRegistrationEvent> lRegistrationEventWriter(@Qualifier("dataSourceOUT") DataSource dataSource) {
-//        JdbcBatchItemWriter<LRegistrationEvent> writer = new JdbcBatchItemWriter<>();
-//        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<LRegistrationEvent>());
-//        writer.setSql("insert into L_REGISTRATION_EVENT(EVENT_ID, EVENT_CODE, EVENT_NAME)" +
-//                " values (:eventId, :eventCode, :eventName)");
-//        writer.setDataSource(dataSource);
-//        return writer;
-//    }
+
+    @Bean
+    @StepScope
+    public JdbcCursorItemReader<VehiclePhoto> vehiclePhotoReader(@Qualifier("dataSourceIN") DataSource dataSource,
+                                                                 RowMapper<VehiclePhoto> rowMapper) {
+        JdbcCursorItemReader<VehiclePhoto> reader = new JdbcCursorItemReader<>();
+        reader.setDataSource(dataSource);
+        reader.setSql(queries.getVehiclePhotoSelectQuery());
+        reader.setRowMapper(rowMapper);
+        return reader;
+    }
+
+    @Bean
+    @StepScope
+    public JdbcBatchItemWriter<VehiclePhoto> vehiclePhotoWriter(@Qualifier("dataSourceOUT") DataSource dataSource) {
+        JdbcBatchItemWriter<VehiclePhoto> writer = new JdbcBatchItemWriter<>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<VehiclePhoto>());
+        writer.setSql(queries.getVehiclePhotoInsertQuery());
+        writer.setDataSource(dataSource);
+        return writer;
+    }
+
+    @Bean
+    @StepScope
+    public JdbcCursorItemReader<OrganizationStamp> orgStampReader(@Qualifier("dataSourceIN") DataSource dataSource,
+                                                                  RowMapper<OrganizationStamp> rowMapper) {
+        JdbcCursorItemReader<OrganizationStamp> reader = new JdbcCursorItemReader<>();
+        reader.setDataSource(dataSource);
+        reader.setSql(queries.getOrgStampSelectQuery());
+        reader.setRowMapper(rowMapper);
+        return reader;
+    }
+
+    @Bean
+    @StepScope
+    public JdbcBatchItemWriter<OrganizationStamp> orgStampWriter(@Qualifier("dataSourceOUT") DataSource dataSource) {
+        JdbcBatchItemWriter<OrganizationStamp> writer = new JdbcBatchItemWriter<>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<OrganizationStamp>());
+        writer.setSql(queries.getOrgStampInsertQuery());
+        writer.setDataSource(dataSource);
+        return writer;
+    }
+
+
 //
 //    @Bean
 //    @StepScope
@@ -276,20 +272,34 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
                 .listener(listener)
                 .build();
     }
-//
-//    @Bean
-//    public Step migrateLRegistrationEvent(ItemReader<LRegistrationEvent> reader,
-//                                          @Qualifier("lRegistrationEventCompositeWriter") ItemWriter<LRegistrationEvent> writer,
-//                                          ItemProcessor<LRegistrationEvent, LRegistrationEvent> processor,
-//                                          StepExecutionListener listener) {
-//        return steps.get("migrateLRegistrationEvent")
-//                .<LRegistrationEvent, LRegistrationEvent>chunk(100)
-//                .reader(reader)
-//                .processor(processor)
-//                .writer(writer)
-//                .listener(listener)
-//                .build();
-//    }
+
+    @Bean(name = "migrateOrgStamp")
+    public Step migrateOrganizationStamp(ItemReader<OrganizationStamp> reader,
+                                         ItemWriter<OrganizationStamp> writer,
+                                         ItemProcessor<OrganizationStamp, OrganizationStamp> orgStampProcessor,
+                                         StepExecutionListener listener) {
+        return steps.get("migrateOrgStamp")
+                .<OrganizationStamp, OrganizationStamp>chunk(50)
+                .reader(reader)
+                .processor(orgStampProcessor)
+                .writer(writer)
+                .listener(listener)
+                .build();
+    }
+
+    @Bean
+    public Step migrateVehiclePhoto(ItemReader<VehiclePhoto> reader,
+                                    ItemWriter<VehiclePhoto> writer,
+                                    ItemProcessor<VehiclePhoto, VehiclePhoto> processor,
+                                    StepExecutionListener listener) {
+        return steps.get("migrateVehiclePhoto")
+                .<VehiclePhoto, VehiclePhoto>chunk(50)
+                .reader(reader)
+                .processor(processor)
+                .writer(writer)
+                .listener(listener)
+                .build();
+    }
 //
 //    @Bean
 //    public Step migrateVehicleHistory(ItemReader<VehicleHistory> reader,
@@ -308,11 +318,13 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
     @Bean
     public Job migrateJob(@Qualifier("jobListener") JobExecutionListener listener,
                           @Qualifier("migrateIndivEnroll") Step migrateIndivEnroll,
-                          @Qualifier("migrateBiometric") Step migrateBiometric) {
+                          @Qualifier("migrateBiometric") Step migrateBiometric,
+                          @Qualifier("migrateOrgStamp") Step migrateOrgStamp,
+                          @Qualifier("migrateVehiclePhoto") Step migrateVehiclePhoto) {
 
         SimpleJobBuilder builder = jobs.get("EverestMigration").incrementer(new RunIdIncrementer())
                 .listener(listener)
-                .start(migrateBiometric).next(migrateIndivEnroll);
+                .start(migrateVehiclePhoto).next(migrateOrgStamp);
 
 //        FlowJobBuilder builder = jobs.get("migration")
 //                .listener(listener)
