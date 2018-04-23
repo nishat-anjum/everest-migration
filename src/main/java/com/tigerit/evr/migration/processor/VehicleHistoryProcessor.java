@@ -16,17 +16,17 @@ public class VehicleHistoryProcessor implements ItemProcessor<VehicleHistory, Ve
 
     @Override
     public VehicleHistory process(VehicleHistory vehicleHistory) throws Exception {
-        vehicleHistory.setRegistrationId(StringUtils.strip(vehicleHistory.getRegistrationId()));
-        vehicleHistory.setRegistrationNo(StringUtils.strip(vehicleHistory.getRegistrationNo()));
-        vehicleHistory.setPreviousRegistrationNo(StringUtils.strip(vehicleHistory.getPreviousRegistrationNo()));
-        vehicleHistory.setVehicleId(StringUtils.strip(vehicleHistory.getVehicleId()));
-        vehicleHistory.setChassisNo(StringUtils.strip(vehicleHistory.getChassisNo()));
-        vehicleHistory.setPersonId(StringUtils.strip(vehicleHistory.getPersonId()));
-        vehicleHistory.setPersonName(StringUtils.strip(vehicleHistory.getPersonName()));
-        vehicleHistory.setUpdateDate(StringUtils.strip(vehicleHistory.getUpdateDate()));
-        vehicleHistory.setlRegEventName(StringUtils.strip(vehicleHistory.getlRegEventName()));
-        vehicleHistory.setlOwnershipTypeName(StringUtils.strip(vehicleHistory.getlOwnershipTypeName()));
-        vehicleHistory.setlVehicleTypeName(StringUtils.strip(vehicleHistory.getlVehicleTypeName()));
+//        vehicleHistory.setRegistrationId(StringUtils.strip(vehicleHistory.getRegistrationId()));
+//        vehicleHistory.setRegistrationNo(StringUtils.strip(vehicleHistory.getRegistrationNo()));
+//        vehicleHistory.setPreviousRegistrationNo(StringUtils.strip(vehicleHistory.getPreviousRegistrationNo()));
+//        vehicleHistory.setVehicleId(StringUtils.strip(vehicleHistory.getVehicleId()));
+//        vehicleHistory.setChassisNo(StringUtils.strip(vehicleHistory.getChassisNo()));
+//        vehicleHistory.setPersonId(StringUtils.strip(vehicleHistory.getPersonId()));
+//        vehicleHistory.setPersonName(StringUtils.strip(vehicleHistory.getPersonName()));
+//        vehicleHistory.setUpdateDate(StringUtils.strip(vehicleHistory.getUpdateDate()));
+//        vehicleHistory.setlRegEventName(StringUtils.strip(vehicleHistory.getlRegEventName()));
+//        vehicleHistory.setlOwnershipTypeName(StringUtils.strip(vehicleHistory.getlOwnershipTypeName()));
+//        vehicleHistory.setlVehicleTypeName(StringUtils.strip(vehicleHistory.getlVehicleTypeName()));
 
         logger.debug("Processing result: {}", vehicleHistory);
         return vehicleHistory;

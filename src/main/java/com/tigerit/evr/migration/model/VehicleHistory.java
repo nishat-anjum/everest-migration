@@ -1,165 +1,182 @@
 package com.tigerit.evr.migration.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by raqib on 02/12/15.
  */
 public class VehicleHistory implements Serializable {
-    private String registrationId;
-    private String registrationNo;
-    private String previousRegistrationNo;
-    private String vehicleId;
-    private String chassisNo;
-    private String personId;
-    private String personName;
-    private Integer sequenceNo;
-    private String updateDate;
-    private Long lRegEventId;
-    private String lRegEventName;
-    private Long lOwnershipTypeId;
-    private String lOwnershipTypeName;
-    private Long lVehicleTypeId;
-    private String lVehicleTypeName;
+    private Long enrollId;
+    private String paymentReceiptNo;
+    private String paymentDate;
+    private String regNoEng;
+    private String regNoNpl;
+    private String chassis;
+    private String vehicleType;
+    private String ownerName;
+    private int ownerType;
+    private String ownerTransferDate;
+    private int ownerSeqNo;
+    private String regEventName;
+    private String ownershipTypeName;
+    private int regEventId;
+    private String regEventDate;
+    private int vehicleTypeId;
+    private Date createTime;
+    private String createdBy;
 
-    public String getRegistrationId() {
-        return registrationId;
+    public Long getEnrollId() {
+        return enrollId;
     }
 
-    public void setRegistrationId(String registrationId) {
-        this.registrationId = registrationId;
+    public void setEnrollId(Long enrollId) {
+        this.enrollId = enrollId;
     }
 
-    public String getRegistrationNo() {
-        return registrationNo;
+    public String getPaymentReceiptNo() {
+        return paymentReceiptNo;
     }
 
-    public void setRegistrationNo(String registrationNo) {
-        this.registrationNo = registrationNo;
+    public void setPaymentReceiptNo(String paymentReceiptNo) {
+        this.paymentReceiptNo = paymentReceiptNo;
     }
 
-    public String getPreviousRegistrationNo() {
-        return previousRegistrationNo;
+    public String getPaymentDate() {
+        return paymentDate;
     }
 
-    public void setPreviousRegistrationNo(String previousRegistrationNo) {
-        this.previousRegistrationNo = previousRegistrationNo;
+    public void setPaymentDate(String paymentDate) {
+        this.paymentDate = paymentDate;
     }
 
-    public String getVehicleId() {
-        return vehicleId;
+    public String getRegNoEng() {
+        return regNoEng;
     }
 
-    public void setVehicleId(String vehicleId) {
-        this.vehicleId = vehicleId;
+    public void setRegNoEng(String regNoEng) {
+        this.regNoEng = regNoEng;
     }
 
-    public String getChassisNo() {
-        return chassisNo;
+    public String getRegNoNpl() {
+        return regNoNpl;
     }
 
-    public void setChassisNo(String chassisNo) {
-        this.chassisNo = chassisNo;
+    public void setRegNoNpl(String regNoNpl) {
+        this.regNoNpl = regNoNpl;
     }
 
-    public String getPersonId() {
-        return personId;
+    public String getChassis() {
+        return chassis;
     }
 
-    public void setPersonId(String personId) {
-        this.personId = personId;
+    public void setChassis(String chassis) {
+        this.chassis = chassis;
     }
 
-    public String getPersonName() {
-        return personName;
+    public String getVehicleType() {
+        return vehicleType;
     }
 
-    public void setPersonName(String personName) {
-        this.personName = personName;
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
-    public Integer getSequenceNo() {
-        return sequenceNo;
+    public String getOwnerName() {
+        return ownerName;
     }
 
-    public void setSequenceNo(Integer sequenceNo) {
-        this.sequenceNo = sequenceNo;
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
-    public String getUpdateDate() {
-        return updateDate;
+    public int getOwnerType() {
+        return ownerType;
     }
 
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
+    public void setOwnerType(int ownerType) {
+        this.ownerType = ownerType;
     }
 
-    public Long getlRegEventId() {
-        return lRegEventId;
+    public String getOwnerTransferDate() {
+        return ownerTransferDate;
     }
 
-    public void setlRegEventId(Long lRegEventId) {
-        this.lRegEventId = lRegEventId;
+    public void setOwnerTransferDate(String ownerTransferDate) {
+        this.ownerTransferDate = ownerTransferDate;
     }
 
-    public String getlRegEventName() {
-        return lRegEventName;
+    public int getOwnerSeqNo() {
+        return ownerSeqNo;
     }
 
-    public void setlRegEventName(String lRegEventName) {
-        this.lRegEventName = lRegEventName;
+    public void setOwnerSeqNo(int ownerSeqNo) {
+        this.ownerSeqNo = ownerSeqNo;
     }
 
-    public Long getlOwnershipTypeId() {
-        return lOwnershipTypeId;
+    public String getRegEventName() {
+        return regEventName;
     }
 
-    public void setlOwnershipTypeId(Long lOwnershipTypeId) {
-        this.lOwnershipTypeId = lOwnershipTypeId;
+    public void setRegEventName(String regEventName) {
+        this.regEventName = regEventName;
     }
 
-    public String getlOwnershipTypeName() {
-        return lOwnershipTypeName;
+    public String getOwnershipTypeName() {
+        return ownershipTypeName;
     }
 
-    public void setlOwnershipTypeName(String lOwnershipTypeName) {
-        this.lOwnershipTypeName = lOwnershipTypeName;
+    public void setOwnershipTypeName(String ownershipTypeName) {
+        this.ownershipTypeName = ownershipTypeName;
     }
 
-    public Long getlVehicleTypeId() {
-        return lVehicleTypeId;
+    public int getRegEventId() {
+        return regEventId;
     }
 
-    public void setlVehicleTypeId(Long lVehicleTypeId) {
-        this.lVehicleTypeId = lVehicleTypeId;
+    public void setRegEventId(int regEventId) {
+        this.regEventId = regEventId;
     }
 
-    public String getlVehicleTypeName() {
-        return lVehicleTypeName;
+    public String getRegEventDate() {
+        return regEventDate;
     }
 
-    public void setlVehicleTypeName(String lVehicleTypeName) {
-        this.lVehicleTypeName = lVehicleTypeName;
+    public void setRegEventDate(String regEventDate) {
+        this.regEventDate = regEventDate;
+    }
+
+    public int getVehicleTypeId() {
+        return vehicleTypeId;
+    }
+
+    public void setVehicleTypeId(int vehicleTypeId) {
+        this.vehicleTypeId = vehicleTypeId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     @Override
     public String toString() {
         return "VehicleHistory{" +
-                "registrationId='" + registrationId + '\'' +
-                ", registrationNo='" + registrationNo + '\'' +
-                ", previousRegistrationNo='" + previousRegistrationNo + '\'' +
-                ", vehicleId='" + vehicleId + '\'' +
-                ", chassisNo='" + chassisNo + '\'' +
-                ", personId='" + personId + '\'' +
-                ", personName='" + personName + '\'' +
-                ", sequenceNo=" + sequenceNo +
-                ", updateDate='" + updateDate + '\'' +
-                ", lRegEventId=" + lRegEventId +
-                ", lRegEventName='" + lRegEventName + '\'' +
-                ", lOwnershipTypeId=" + lOwnershipTypeId +
-                ", lOwnershipTypeName='" + lOwnershipTypeName + '\'' +
-                ", lVehicleTypeId=" + lVehicleTypeId +
-                ", lVehicleTypeName='" + lVehicleTypeName + '\'' +
+                "enrollId=" + enrollId +
+                ", regNoEng='" + regNoEng + '\'' +
+                ", regNoNpl='" + regNoNpl + '\'' +
+                ", regEventName='" + regEventName + '\'' +
                 '}';
     }
 }
