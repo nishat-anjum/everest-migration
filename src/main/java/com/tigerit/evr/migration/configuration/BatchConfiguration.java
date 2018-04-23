@@ -80,54 +80,26 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
         return writer;
     }
 
-//    @Bean
-//    @StepScope
-//    public JdbcBatchItemWriter<Fitness> fitnessActivityWriter(@Qualifier("dataSourceOUT") DataSource dataSource) {
-//        JdbcBatchItemWriter<Fitness> writer = new JdbcBatchItemWriter<>();
-//        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Fitness>());
-//        writer.setSql("insert into ACTIVITY_FITNESS(FITNESS_ID, REGISTRATION_NO, REGISTRATION_ID, EXPIRY_DATE, ACTIVITY_ID, ACTIVITY_ACTION, ACTIVITY_USER, ACTIVITY_TIME)" +
-//                " values (:fitnessId, :registrationNo, :registrationId, :expiryDate, ACTIVITY_FITNESS_SEQ.nextval, 0, 'service', systimestamp)");
-//        writer.setDataSource(dataSource);
-//        return writer;
-//    }
-//
-//    @Bean
-//    @StepScope
-//    public CompositeItemWriter<Fitness> fitnessCompositeWriter(@Qualifier("indivTypeEnrollWriter") final ItemWriter<Fitness> writer,
-//                                                               @Qualifier("fitnessActivityWriter") final ItemWriter<Fitness> activityWriter) {
-//        CompositeItemWriter<Fitness> compositeItemWriter = new CompositeItemWriter<>();
-//        compositeItemWriter.setDelegates(new ArrayList<ItemWriter<? super Fitness>>() {
-//            {
-//                add(writer);
-//                add(activityWriter);
-//            }
-//        });
-//        return compositeItemWriter;
-//    }
-//    // tag::ReaderWriterProcessor[Fitness]
-//
-//    // tag::ReaderWriterProcessor[TaxToken]
-//    @Bean
-//    @StepScope
-//    public JdbcCursorItemReader<TaxToken> taxTokenReader(@Qualifier("dataSourceIN") DataSource dataSource,
-//                                                         RowMapper<TaxToken> rowMapper) {
-//        JdbcCursorItemReader<TaxToken> reader = new JdbcCursorItemReader<>();
-//        reader.setDataSource(dataSource);
-//        reader.setSql("select TAX_TOKEN_ID, REGISTRATION_NO, REGISTRATION_ID, EXPIRY_DATE from TAX_TOKEN order by TAX_TOKEN_ID");
-//        reader.setRowMapper(rowMapper);
-//        return reader;
-//    }
-//
-//    @Bean
-//    @StepScope
-//    public JdbcBatchItemWriter<TaxToken> taxTokenWriter(@Qualifier("dataSourceOUT") DataSource dataSource) {
-//        JdbcBatchItemWriter<TaxToken> writer = new JdbcBatchItemWriter<>();
-//        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<TaxToken>());
-//        writer.setSql("insert into TAX_TOKEN(TAX_TOKEN_ID, REGISTRATION_NO, REGISTRATION_ID, EXPIRY_DATE)" +
-//                " values (:taxTokenId, :registrationNo, :registrationId, :expiryDate)");
-//        writer.setDataSource(dataSource);
-//        return writer;
-//    }
+    @Bean
+    @StepScope
+    public JdbcCursorItemReader<Biometric> biometricReader(@Qualifier("dataSourceIN") DataSource dataSource,
+                                                           RowMapper<Biometric> rowMapper) {
+        JdbcCursorItemReader<Biometric> reader = new JdbcCursorItemReader<>();
+        reader.setDataSource(dataSource);
+        reader.setSql(Queries.BIOMETRIC_SELECT);
+        reader.setRowMapper(rowMapper);
+        return reader;
+    }
+
+    @Bean
+    @StepScope
+    public JdbcBatchItemWriter<Biometric> biometricWriter(@Qualifier("dataSourceOUT") DataSource dataSource) {
+        JdbcBatchItemWriter<Biometric> writer = new JdbcBatchItemWriter<>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Biometric>());
+        writer.setSql(Queries.BIOMETRIC_INSERT);
+        writer.setDataSource(dataSource);
+        return writer;
+    }
 //
 //    @Bean
 //    @StepScope
@@ -142,7 +114,7 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
 //
 //    @Bean
 //    @StepScope
-//    public CompositeItemWriter<TaxToken> taxTokenCompositeWriter(@Qualifier("taxTokenWriter") final ItemWriter<TaxToken> writer,
+//    public CompositeItemWriter<TaxToken> taxTokenCompositeWriter(@Qualifier("biometricWriter") final ItemWriter<TaxToken> writer,
 //                                                                 @Qualifier("taxTokenActivityWriter") final ItemWriter<TaxToken> activityWriter) {
 //        CompositeItemWriter<TaxToken> compositeItemWriter = new CompositeItemWriter<>();
 //        compositeItemWriter.setDelegates(new ArrayList<ItemWriter<? super TaxToken>>() {
@@ -291,19 +263,19 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
                 .build();
     }
 
-//    @Bean
-//    public Step migrateTaxToken(ItemReader<TaxToken> reader,
-//                                @Qualifier("taxTokenCompositeWriter") ItemWriter<TaxToken> writer,
-//                                ItemProcessor<TaxToken, TaxToken> processor,
-//                                StepExecutionListener listener) {
-//        return steps.get("migrateTaxToken")
-//                .<TaxToken, TaxToken>chunk(100)
-//                .reader(reader)
-//                .processor(processor)
-//                .writer(writer)
-//                .listener(listener)
-//                .build();
-//    }
+    @Bean(name = "migrateBiometric")
+    public Step migrateBiometric(ItemReader<Biometric> biometricReader,
+                                 ItemWriter<Biometric> biometricWriter,
+                                 ItemProcessor<Biometric, Biometric> biometricProcessor,
+                                 StepExecutionListener listener) {
+        return steps.get("migrateBiometric")
+                .<Biometric, Biometric>chunk(100)
+                .reader(biometricReader)
+                .processor(biometricProcessor)
+                .writer(biometricWriter)
+                .listener(listener)
+                .build();
+    }
 //
 //    @Bean
 //    public Step migrateLRegistrationEvent(ItemReader<LRegistrationEvent> reader,
@@ -335,17 +307,18 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
 
     @Bean
     public Job migrateJob(@Qualifier("jobListener") JobExecutionListener listener,
-                          @Qualifier("migrateIndivEnroll") Step migrateIndivEnroll) {
+                          @Qualifier("migrateIndivEnroll") Step migrateIndivEnroll,
+                          @Qualifier("migrateBiometric") Step migrateBiometric) {
 
         SimpleJobBuilder builder = jobs.get("EverestMigration").incrementer(new RunIdIncrementer())
                 .listener(listener)
-                .start(migrateIndivEnroll);
+                .start(migrateBiometric).next(migrateIndivEnroll);
 
 //        FlowJobBuilder builder = jobs.get("migration")
 //                .listener(listener)
 //                .start(migrateFitness)
 //                .split(new SimpleAsyncTaskExecutor()).add(
-//                        new FlowBuilder<Flow>("taxToken").from(migrateTaxToken).end(),
+//                        new FlowBuilder<Flow>("taxToken").from(migrateBiometric).end(),
 //                        new FlowBuilder<Flow>("lRegistrationEvent").from(migrateLRegistrationEvent).end(),
 //                        new FlowBuilder<Flow>("vehicleHistory").from(migrateVehicleHistory).end()
 //                ).end();

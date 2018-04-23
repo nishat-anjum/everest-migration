@@ -72,4 +72,13 @@ public class Queries {
             ":currentAuthorityName, :ownershipType, :model, :manufacturer, :chassisNo, :registrationDateNpl, :ownershipTransferDateNpl, :paymentDateNpl, " +
             ":paymentReceiptNumber, :noOfSeats, :ownerEmail, :ownerPhone, :bankName, :vehiclePhotoId, :ownerName, :ownerNID, :ownerAddress, :nationality, " +
             ":nationalityText, :passportIssueAuth, :passportIssueAuthText, :bioDataId, :epc, :rfid, :tagId, :vehicleClass, :createdBy, :createTime)";
+
+
+    public static final String BIOMETRIC_SELECT = "SELECT bio.id, bio.photo, bio.signature " +
+            "FROM Biometric bio " +
+            "LEFT JOIN person per ON (bio.applicant_id = per.id) " +
+            "WHERE bio.active = 1";
+
+    public static final String BIOMETRIC_INSERT= "INSERT INTO Biometric_Test (id, photo, signature, created_by, create_time) VALUES " +
+            "(:id, :photo, :signature, :createdBy, :createTime)";
 }
