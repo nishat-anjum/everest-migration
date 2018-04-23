@@ -165,6 +165,27 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
         return reader;
     }
 
+    @StepScope
+    @Bean(name = "vehicleHistoryWriter")
+    public JdbcBatchItemWriter<VehicleHistory> vehicleHistoryWriter(@Qualifier("dataSourceOUT") DataSource dataSource) {
+        JdbcBatchItemWriter<VehicleHistory> writer = new JdbcBatchItemWriter<>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<VehicleHistory>());
+        writer.setSql(queries.getVehiclePhotoInsertQuery());
+        writer.setDataSource(dataSource);
+        return writer;
+    }
+
+    @StepScope
+    @Bean(name = "vehicleHistoryReader")
+    public JdbcCursorItemReader<VehicleHistory> vehicleHistoryReader(@Qualifier("dataSourceIN") DataSource dataSource,
+                                                                     @Qualifier("vehicleHistoryRowMapper") RowMapper<VehicleHistory> rowMapper) {
+        JdbcCursorItemReader<VehicleHistory> reader = new JdbcCursorItemReader<>();
+        reader.setDataSource(dataSource);
+        reader.setSql(queries.getVehicleHistorySelectQuery());
+        reader.setRowMapper(rowMapper);
+        return reader;
+    }
+
 
     @Bean(name = "migrateIndivEnroll")
     @StepScope
@@ -236,25 +257,26 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
                 .listener(listener)
                 .build();
     }
-//
-//    @Bean
-//    public Step migrateVehicleHistory(ItemReader<VehicleHistory> reader,
-//                                      @Qualifier("vehicleHistoryCompositeWriter") ItemWriter<VehicleHistory> writer,
-//                                      ItemProcessor<VehicleHistory, VehicleHistory> processor,
-//                                      StepExecutionListener listener) {
-//        return steps.get("migrateVehicleHistory")
-//                .<VehicleHistory, VehicleHistory>chunk(100)
-//                .reader(reader)
-//                .processor(processor)
-//                .writer(writer)
-//                .listener(listener)
-//                .build();
-//    }
+
+    @Bean
+    public Step migrateVehicleHistory(ItemReader<VehicleHistory> reader,
+                                      @Qualifier("vehicleHistoryWriter") ItemWriter<VehicleHistory> writer,
+                                      ItemProcessor<VehicleHistory, VehicleHistory> processor,
+                                      StepExecutionListener listener) {
+        return steps.get("migrateVehicleHistory")
+                .<VehicleHistory, VehicleHistory>chunk(100)
+                .reader(reader)
+                .processor(processor)
+                .writer(writer)
+                .listener(listener)
+                .build();
+    }
 
     @Bean
     public Job migrateJob(@Qualifier("jobListener") JobExecutionListener listener,
                           @Qualifier("migrateIndivEnroll") Step migrateIndivEnroll,
                           @Qualifier("migrateOrgEnroll") Step migrateOrgEnroll,
+                          @Qualifier("migrateVehicleHistory") Step migrateVehicleHistory,
                           @Qualifier("migrateBiometric") Step migrateBiometric,
                           @Qualifier("migrateOrgStamp") Step migrateOrgStamp,
                           @Qualifier("migrateVehiclePhoto") Step migrateVehiclePhoto) {
@@ -265,7 +287,8 @@ public class BatchConfiguration extends DefaultBatchConfigurer {
                 .next(migrateOrgStamp)
                 .next(migrateBiometric)
                 .next(migrateIndivEnroll)
-                .next(migrateOrgEnroll);
+                .next(migrateOrgEnroll)
+                .next(migrateVehicleHistory);
 
 //        FlowJobBuilder builder = jobs.get("migration")
 //                .listener(listener)

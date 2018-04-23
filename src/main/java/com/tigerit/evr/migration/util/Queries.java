@@ -32,7 +32,7 @@ public class Queries {
     @Value("${organization.type.enroll.select}")
     private String orgTypeEnrollSelectQuery;
 
-    @Value("${organization.type.enroll.select}")
+    @Value("${organization.type.enroll.insert}")
     private String orgTypeEnrollInsertQuery;
 
     @Value("${individual.type.enroll.select}")
@@ -40,6 +40,12 @@ public class Queries {
 
     @Value("${individual.type.enroll.insert}")
     private String indivTypeEnrollInsertQuery;
+
+    @Value("${vehicle.history.select}")
+    private String vehicleHistorySelectQuery;
+
+    @Value("${vehicle.history.insert}")
+    private String vehicleHistoryInsertQuery;
 
     public String getOrgStampInsertQuery() {
         return orgStampInsertQuery;
@@ -119,5 +125,21 @@ public class Queries {
 
     public void setIndivTypeEnrollInsertQuery(String indivTypeEnrollInsertQuery) {
         this.indivTypeEnrollInsertQuery = indivTypeEnrollInsertQuery;
+    }
+
+    public String getVehicleHistorySelectQuery() {
+        return vehicleHistorySelectQuery;
+    }
+
+    public void setVehicleHistorySelectQuery(String vehicleHistorySelectQuery) {
+        this.vehicleHistorySelectQuery = vehicleHistorySelectQuery;
+    }
+
+    public String getVehicleHistoryInsertQuery() {
+        return vehicleHistoryInsertQuery;
+    }
+
+    public void setVehicleHistoryInsertQuery(String vehicleHistoryInsertQuery) {
+        this.vehicleHistoryInsertQuery = vehicleHistoryInsertQuery;
     }
 }

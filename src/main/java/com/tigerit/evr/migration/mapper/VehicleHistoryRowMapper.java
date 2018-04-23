@@ -8,28 +8,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by raqib on 03/12/15.
+ * Created by nishat on 24/04/18.
  */
 @Component
 public class VehicleHistoryRowMapper  implements RowMapper<VehicleHistory> {
     @Override
     public VehicleHistory mapRow(ResultSet rs, int rowNum) throws SQLException {
         VehicleHistory vehicleHistory = new VehicleHistory();
-//        vehicleHistory.setRegistrationId(rs.getString("registration_id"));
-//        vehicleHistory.setRegistrationNo(rs.getString("registration_no"));
-//        vehicleHistory.setPreviousRegistrationNo(rs.getString("previous_registration_no"));
-//        vehicleHistory.setVehicleId(rs.getString("vehicle_id"));
-//        vehicleHistory.setChassisNo(rs.getString("chassis_no"));
-//        vehicleHistory.setPersonId(rs.getString("person_id"));
-//        vehicleHistory.setPersonName(rs.getString("person_name"));
-//        vehicleHistory.setSequenceNo(rs.getInt("sequence_no"));
-//        vehicleHistory.setUpdateDate(rs.getString("update_date"));
-//        vehicleHistory.setlRegEventId(rs.getLong("l_reg_event_id"));
-//        vehicleHistory.setlRegEventName(rs.getString("l_reg_event_name"));
-//        vehicleHistory.setlOwnershipTypeId(rs.getLong("l_ownership_type_id"));
-//        vehicleHistory.setlOwnershipTypeName(rs.getString("l_ownership_type_name"));
-//        vehicleHistory.setlVehicleTypeId(rs.getLong("l_vehicle_type_id"));
-//        vehicleHistory.setlVehicleTypeName(rs.getString("l_vehicle_type_name"));
+        vehicleHistory.setRegEventDate(rs.getString("issue_date"));
+        vehicleHistory.setRegEventName(rs.getString("form_type"));
+        vehicleHistory.setOwnerTransferDate(rs.getString("ownership_transfer_date"));
+        vehicleHistory.setChassis(rs.getString("chassis_no"));
+        vehicleHistory.setPaymentReceiptNo(rs.getString("payment_receipt_number"));
+        vehicleHistory.setOwnerType(rs.getInt("owner_type"));
+        vehicleHistory.setRegNoNpl(rs.getString("nepali_reg_no"));
+        vehicleHistory.setRegNoEng(rs.getString("dl_number"));
+        vehicleHistory.setRegNoEng(rs.getString("dl_number"));
+        vehicleHistory.setPaymentDate(rs.getString("payment_date"));
+        vehicleHistory.setOwnerName(rs.getString("owner_name"));
+        vehicleHistory.setEnrollId(rs.getLong("enroll_id"));
 
         return vehicleHistory;
     }
