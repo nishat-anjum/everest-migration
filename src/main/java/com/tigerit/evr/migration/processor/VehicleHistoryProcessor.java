@@ -1,7 +1,6 @@
 package com.tigerit.evr.migration.processor;
 
 import com.tigerit.evr.migration.model.VehicleHistory;
-import com.tigerit.evr.migration.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;

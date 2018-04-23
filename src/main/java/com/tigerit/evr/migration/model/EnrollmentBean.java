@@ -11,7 +11,7 @@ public class EnrollmentBean implements Serializable {
     private Long enrollId;
     private String regNo;
     private String regNoNepal;
-    private String chasisNo;
+    private String chassisNo;
 
     private int ownershipType;
     private String ownershipTypeName;
@@ -87,12 +87,12 @@ public class EnrollmentBean implements Serializable {
         this.regNoNepal = regNoNepal;
     }
 
-    public String getChasisNo() {
-        return chasisNo;
+    public String getChassisNo() {
+        return chassisNo;
     }
 
-    public void setChasisNo(String chasisNo) {
-        this.chasisNo = chasisNo;
+    public void setChassisNo(String chassisNo) {
+        this.chassisNo = chassisNo;
     }
 
     public int getOwnershipType() {
